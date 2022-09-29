@@ -61,12 +61,16 @@ router.get('/prod/:id', async (ctx) => {
   ctx.set('Cache-Control', 'public, max-age=604800');
   ctx.type = 'text/html';
   ctx.body = html;
-  console.log(`${ctx.ip} ${ctx.method} ${ctx.url} ${ctx.status}`.green);
+
+  let country = ctx.request.header['cf-ipcountry'];
+  console.log(`${country || ctx.ip} ${ctx.url}`.gray + `${ctx.status}`.green);
 });
 router.get('/(.*)', async (ctx) => {
   // redirect to pchome
   ctx.redirect(`https://24h.pchome.com.tw/${ctx.params[0]}`);
-  console.log(`${ctx.ip} ${ctx.method} ${ctx.url} ${ctx.status}`.green);
+
+  let country = ctx.request.header['cf-ipcountry'];
+  console.log(`${country || ctx.ip} ${ctx.url}`.gray + `${ctx.status}`.green);
 })
 
 app.use(router.routes());
