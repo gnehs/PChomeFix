@@ -50,12 +50,11 @@ router.get('/prod/:id', async (ctx) => {
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
     <meta name="twitter:image" content="${img}" />
+    <!-- Redirect -->
+    <meta http-equiv="refresh" content="0; url = ${url}" />
   </head>
   <body>
-    <a href="${url}">${title}</a>
-    <script>
-      window.location.href = '${url}';
-    </script>
+    正在帶您前往「<a href="${url}">${title}</a>」。
   </body>
   </html>
   `
