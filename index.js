@@ -1,4 +1,5 @@
 const axios = require('axios');
+const colors = require('colors');
 const pangu = require('pangu');
 const cheerio = require('cheerio');
 const Koa = require('koa');
@@ -59,10 +60,12 @@ router.get('/prod/:id', async (ctx) => {
   </html>
   `
   ctx.body = html;
+  console.log(`${ctx.ip} ${ctx.method} ${ctx.url} ${ctx.status}`.green);
 });
 router.get('/(.*)', async (ctx) => {
   // redirect to pchome
   ctx.redirect(`https://24h.pchome.com.tw/${ctx.params[0]}`);
+  console.log(`${ctx.ip} ${ctx.method} ${ctx.url} ${ctx.status}`.green);
 })
 
 app.use(router.routes());
