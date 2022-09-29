@@ -52,13 +52,15 @@ router.get('/prod/:id', async (ctx) => {
     <meta name="twitter:image" content="${img}" />
   </head>
   <body>
-  <a href="${url}">${title}</a>
-  <script>
-    window.location.href = '${url}';
-  </script>
+    <a href="${url}">${title}</a>
+    <script>
+      window.location.href = '${url}';
+    </script>
   </body>
   </html>
   `
+  ctx.set('Cache-Control', 'public, max-age=604800');
+  ctx.type = 'text/html';
   ctx.body = html;
   console.log(`${ctx.ip} ${ctx.method} ${ctx.url} ${ctx.status}`.green);
 });
