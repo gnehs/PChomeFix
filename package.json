@@ -1,0 +1,28 @@
+{
+  "name": "pchomefix",
+  "version": "1.0.0",
+  "description": "Fix PChome embeds in Discord, Telegram...",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnehs/PChomeFix.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gnehs/PChomeFix/issues"
+  },
+  "homepage": "https://github.com/gnehs/PChomeFix#readme",
+  "dependencies": {
+    "@koa/router": "^12.0.0",
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
+    "koa": "^2.13.4",
+    "nodemon": "^2.0.20",
+    "pangu": "^4.0.7"
+  }
+}
