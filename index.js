@@ -69,6 +69,7 @@ router.get('/', async (ctx) => {
   </head>
   <body>
     <article class="markdown-body">
+      <img src="https://p.pancake.tw/og.jpg" alt="PChome 預覽連結好朋友" />
       <h1>PChome 預覽連結好朋友</h1>
       <p>協助修正 PChome 線上購物商品在社群媒體與通訊軟體中的預覽</p>
       <h2>如何使用？</h2>
