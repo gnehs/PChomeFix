@@ -31,6 +31,7 @@ router.get('/', async (ctx) => {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css" integrity="sha512-KUoB3bZ1XRBYj1QcH4BHCQjurAZnCO3WdrswyLDtp7BMwCw7dPZngSLqILf68SGgvnWHTD5pPaYrXi6wiRJ65g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       .markdown-body {
@@ -45,6 +46,9 @@ router.get('/', async (ctx) => {
         .markdown-body {
           padding: 15px;
         }
+      }
+      img.banner {
+        border-radius: 16px;
       }
     </style>
 
@@ -67,21 +71,19 @@ router.get('/', async (ctx) => {
     <meta name="twitter:description" content="${description}" />
     <meta name="twitter:image" content="${img}" />
   </head>
-  <body>
-    <article class="markdown-body">
-      <img src="https://p.pancake.tw/og.jpg" alt="PChome 預覽連結好朋友" />
-      <h1>PChome 預覽連結好朋友</h1>
-      <p>協助修正 PChome 線上購物商品在社群媒體與通訊軟體中的預覽</p>
-      <h2>如何使用？</h2>
-      <h3>直接使用</h3>
-      <p>將連結中的 <code>https://24h.pchome.com.tw</code> 替換為 <code>https://p.pancake.tw</code> 即可</p>
-      <h3>透過 UserScript 使用</h3>
-      <p>輕觸「<a href="https://github.com/gnehs/userscripts/raw/main/pchome-link-copy.user.js" target="_blank">這裡</a>」來安裝 UserScript，當開啟支援的商品頁面時便會自動顯示複製連結在網頁右上角。</p>
-      <h2>相關連結</h2>
-      <ul>
-        <li><a href="https://github.com/gnehs/PChomeFix" target="_blank">GitHub</a></li>
-      </ul>
-    </article>
+  <body class="markdown-body">
+    <img src="https://p.pancake.tw/og.jpg" alt="PChome 預覽連結好朋友" class="banner" />
+    <h1>PChome 預覽連結好朋友</h1>
+    <p>協助修正 PChome 線上購物商品在社群媒體與通訊軟體中的預覽</p>
+    <h2>如何使用？</h2>
+    <h3>直接使用</h3>
+    <p>將連結中的 <code>https://24h.pchome.com.tw</code> 替換為 <code>https://p.pancake.tw</code> 即可</p>
+    <h3>透過 UserScript 使用</h3>
+    <p>輕觸「<a href="https://github.com/gnehs/userscripts/raw/main/pchome-link-copy.user.js" target="_blank">這裡</a>」來安裝 UserScript，當開啟支援的商品頁面時便會自動顯示複製連結在網頁右上角。</p>
+    <h2>相關連結</h2>
+    <ul>
+      <li><a href="https://github.com/gnehs/PChomeFix" target="_blank">GitHub</a></li>
+    </ul>
   </body>
   </html>`
   ctx.set('Cache-Control', 'public, max-age=604800');
