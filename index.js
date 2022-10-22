@@ -105,11 +105,18 @@ router.get('/prod/:id', async (ctx) => {
   <!DOCTYPE html>
   <html>
   <head>
+    <!-- Redirect -->
+    <meta http-equiv="refresh" content="0; url = ${url}" />
+    <!-- SEO -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${title}</title>
     <meta name="title" content="${title}" />
     <meta name="description" content="${description}" />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css" integrity="sha512-KUoB3bZ1XRBYj1QcH4BHCQjurAZnCO3WdrswyLDtp7BMwCw7dPZngSLqILf68SGgvnWHTD5pPaYrXi6wiRJ65g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -125,11 +132,30 @@ router.get('/prod/:id', async (ctx) => {
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
     <meta name="twitter:image" content="${img}" />
-    <!-- Redirect -->
-    <meta http-equiv="refresh" content="0; url = ${url}" />
+    <style>
+      .markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 45px;
+      }
+
+      @media (max-width: 767px) {
+        .markdown-body {
+          padding: 15px;
+        }
+      }
+      img.banner {
+        border-radius: 16px;
+      }
+    </style>
   </head>
-  <body>
-    正在帶您前往「<a href="${url}">${title}</a>」。
+  <body class="markdown-body">
+    <h1>PChome 預覽連結好朋友</h1>
+    <p>
+      正在帶您前往「<a href="${url}">${title}</a>」。
+    </p>
   </body>
   </html>
   `
