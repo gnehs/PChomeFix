@@ -20,7 +20,6 @@ async function pchomeJsonpAPI(url) {
 
 app.use(serve(path.join(__dirname, 'public')));
 router.get('/', async (ctx) => {
-
   let title = `PChome 預覽連結好朋友`
   let description = `協助修正 PChome 線上購物商品在社群媒體與通訊軟體中的預覽`
   let img = `https://p.pancake.tw/og.jpg`
@@ -91,17 +90,22 @@ router.get('/', async (ctx) => {
   ctx.type = 'text/html';
   ctx.body = html;
 })
-router.get('/prod/:id', async (ctx) => {
-  const { id } = ctx.params;
-  let prod = await pchomeJsonpAPI(`https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`)
-  let desc = await pchomeJsonpAPI(`https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan&_callback=jsonp`)
-  prod = Object.values(prod)[0];
-  desc = Object.values(desc)[0];
-  let title = pangu.spacing(cheerio.load(prod.Name).text());
-  let description = pangu.spacing(cheerio.load(desc.Slogan).text());
-  let img = Object.entries(prod.Pic).map(([server, url]) => `https://cs-${server}.ecimg.tw${url}`)[0]
-  let url = `https://24h.pchome.com.tw/prod/${id}`
-  let html = `
+router.get(
+  [
+    '/prod/:id',
+    '/prod/:version/:id',
+  ],
+  async (ctx) => {
+    const { id } = ctx.params;
+    let prod = await pchomeJsonpAPI(`https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`)
+    let desc = await pchomeJsonpAPI(`https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan&_callback=jsonp`)
+    prod = Object.values(prod)[0];
+    desc = Object.values(desc)[0];
+    let title = pangu.spacing(cheerio.load(prod.Name).text());
+    let description = pangu.spacing(cheerio.load(desc.Slogan).text());
+    let img = Object.entries(prod.Pic).map(([server, url]) => `https://cs-${server}.ecimg.tw${url}`)[0]
+    let url = `https://24h.pchome.com.tw/prod/v1/${id}`
+    let html = `
   <!DOCTYPE html>
   <html>
   <head>
@@ -159,13 +163,13 @@ router.get('/prod/:id', async (ctx) => {
   </body>
   </html>
   `
-  ctx.set('Cache-Control', 'public, max-age=604800');
-  ctx.type = 'text/html';
-  ctx.body = html;
+    ctx.set('Cache-Control', 'public, max-age=604800');
+    ctx.type = 'text/html';
+    ctx.body = html;
 
-  let country = ctx.request.header['cf-ipcountry'];
-  console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
-});
+    let country = ctx.request.header['cf-ipcountry'];
+    console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
+  });
 router.get('/(.*)', async (ctx) => {
   // redirect to pchome
   ctx.redirect(`https://24h.pchome.com.tw/${ctx.params[0]}`);
