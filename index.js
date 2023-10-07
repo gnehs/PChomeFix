@@ -1,11 +1,11 @@
-const axios = require('axios');
-const colors = require('colors');
-const serve = require('koa-static')
-const path = require('path');
-const pangu = require('pangu');
-const cheerio = require('cheerio');
-const Koa = require('koa');
-const Router = require('@koa/router');
+const axios = require("axios");
+const colors = require("colors");
+const serve = require("koa-static");
+const path = require("path");
+const pangu = require("pangu");
+const cheerio = require("cheerio");
+const Koa = require("koa");
+const Router = require("@koa/router");
 
 const app = new Koa();
 const router = new Router();
@@ -13,17 +13,17 @@ const router = new Router();
 async function pchomeJsonpAPI(url) {
   let res = await axios.get(url);
   res = res.data;
-  res = res.replace('try{jsonp(', '');
-  res = res.replace(');}catch(e){if(window.console){console.log(e);}}', '');
+  res = res.replace("try{jsonp(", "");
+  res = res.replace(");}catch(e){if(window.console){console.log(e);}}", "");
   return JSON.parse(res);
 }
 
-app.use(serve(path.join(__dirname, 'public')));
-router.get('/', async (ctx) => {
-  let title = `PChome 預覽連結好朋友`
-  let description = `協助修正 PChome 線上購物商品在社群媒體與通訊軟體中的預覽`
-  let img = `https://p.pancake.tw/og.jpg`
-  let url = `https://p.pancake.tw/`
+app.use(serve(path.join(__dirname, "public")));
+router.get("/", async (ctx) => {
+  let title = `PChome 預覽連結好朋友`;
+  let description = `協助修正 PChome 線上購物商品在社群媒體與通訊軟體中的預覽`;
+  let img = `https://p.pancake.tw/og.jpg`;
+  let url = `https://p.pancake.tw/`;
   let html = `
   <!DOCTYPE html>
   <html>
@@ -79,33 +79,34 @@ router.get('/', async (ctx) => {
     <h3>直接使用</h3>
     <p>將連結中的 <code>https://24h.pchome.com.tw</code> 替換為 <code>https://p.pancake.tw</code> 即可</p>
     <h3>透過 UserScript 使用</h3>
-    <p>輕觸「<a href="https://github.com/gnehs/userscripts/raw/main/pchome-link-copy.user.js" target="_blank">這裡</a>」來安裝 UserScript，當開啟支援的商品頁面時便會自動顯示複製連結在網頁右上角。</p>
+    <p>輕觸「<a href="https://github.com/gnehs/userscripts/raw/main/pchome-link-copy.user.js" target="_blank">這裡</a>」來安裝 UserScript，當開啟支援的商品頁面時便會自動顯示複製連結在商品圖片下方。</p>
     <h2>相關連結</h2>
     <ul>
       <li><a href="https://github.com/gnehs/PChomeFix" target="_blank">GitHub</a></li>
     </ul>
   </body>
-  </html>`
-  ctx.set('Cache-Control', 'public, max-age=604800');
-  ctx.type = 'text/html';
+  </html>`;
+  ctx.set("Cache-Control", "public, max-age=604800");
+  ctx.type = "text/html";
   ctx.body = html;
-})
-router.get(
-  [
-    '/prod/:id',
-    '/prod/:version/:id',
-  ],
-  async (ctx) => {
-    const { id } = ctx.params;
-    let prod = await pchomeJsonpAPI(`https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`)
-    let desc = await pchomeJsonpAPI(`https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan&_callback=jsonp`)
-    prod = Object.values(prod)[0];
-    desc = Object.values(desc)[0];
-    let title = pangu.spacing(cheerio.load(prod.Name).text());
-    let description = pangu.spacing(cheerio.load(desc.Slogan).text());
-    let img = Object.entries(prod.Pic).map(([server, url]) => `https://cs-${server}.ecimg.tw${url}`)[0]
-    let url = `https://24h.pchome.com.tw/prod/v1/${id}`
-    let html = `
+});
+router.get(["/prod/:id", "/prod/:version/:id"], async (ctx) => {
+  const { id } = ctx.params;
+  let prod = await pchomeJsonpAPI(
+    `https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`
+  );
+  let desc = await pchomeJsonpAPI(
+    `https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan&_callback=jsonp`
+  );
+  prod = Object.values(prod)[0];
+  desc = Object.values(desc)[0];
+  let title = pangu.spacing(cheerio.load(prod.Name).text());
+  let description = pangu.spacing(cheerio.load(desc.Slogan).text());
+  let img = Object.entries(prod.Pic).map(
+    ([server, url]) => `https://cs-${server}.ecimg.tw${url}`
+  )[0];
+  let url = `https://24h.pchome.com.tw/prod/v1/${id}`;
+  let html = `
   <!DOCTYPE html>
   <html>
   <head>
@@ -162,24 +163,24 @@ router.get(
     </p>
   </body>
   </html>
-  `
-    ctx.set('Cache-Control', 'public, max-age=604800');
-    ctx.type = 'text/html';
-    ctx.body = html;
+  `;
+  ctx.set("Cache-Control", "public, max-age=604800");
+  ctx.type = "text/html";
+  ctx.body = html;
 
-    let country = ctx.request.header['cf-ipcountry'];
-    console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
-  });
-router.get('/(.*)', async (ctx) => {
+  let country = ctx.request.header["cf-ipcountry"];
+  console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
+});
+router.get("/(.*)", async (ctx) => {
   // redirect to pchome
   ctx.redirect(`https://24h.pchome.com.tw/${ctx.params[0]}`);
 
-  let country = ctx.request.header['cf-ipcountry'];
+  let country = ctx.request.header["cf-ipcountry"];
   console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
-})
+});
 
 app.use(router.routes());
 app.use(router.allowedMethods());
 
 app.listen(3000);
-console.log('Server running on http://localhost:3000');
+console.log("Server running on http://localhost:3000");
