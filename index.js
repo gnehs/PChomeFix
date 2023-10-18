@@ -36,13 +36,14 @@ async function getProductInfo(id) {
     `https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`
   );
   let desc = await pchomeJsonpAPI(
-    `https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan&_callback=jsonp`
+    `https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan,SloganInfo&_callback=jsonp`
   );
   prod = Object.values(prod)[0];
   desc = Object.values(desc)[0];
   let title = pangu.spacing(cheerio.load(prod.Name).text());
   let description = pangu.spacing(cheerio.load(desc.Slogan).text()).trim();
-  if (description == "") description = desc.SloganInfo.join("\n");
+  console.log(desc);
+  if (description == "") description = desc.SloganInfo?.join("\n");
   let img = Object.entries(prod.Pic).map(
     ([server, url]) => `https://cs-${server}.ecimg.tw${url}`
   )[0];
