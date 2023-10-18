@@ -199,7 +199,6 @@ router.get(["/prod/:id", "/prod/:version/:id"], async (ctx) => {
 });
 router.get("/og/:id", async (ctx) => {
   const { id } = ctx.params;
-  console.time(`[og-image] ${id}`);
   let { title, description, img, price } = await getProductInfo(id);
   // generate og html
   const h = new JSDOM(
@@ -218,6 +217,7 @@ router.get("/og/:id", async (ctx) => {
       hour12: false,
     });
   // generate og image
+  console.time(`[og-image] ${id}`);
   const browser = await getBrowser();
   const page = await browser.newPage();
 
@@ -260,6 +260,7 @@ router.get("/og/:id", async (ctx) => {
   });
 
   await page.close();
+  console.timeEnd(`[og-image] ${id}`);
 
   ctx.set("Cache-Control", "public, max-age=604800");
   ctx.type = "image/png";
@@ -267,7 +268,6 @@ router.get("/og/:id", async (ctx) => {
 
   let country = ctx.request.header["cf-ipcountry"];
   console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
-  console.timeEnd(`[og-image] ${id}`);
 });
 router.get("/(.*)", async (ctx) => {
   // redirect to pchome
