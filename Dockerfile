@@ -18,19 +18,13 @@ RUN apk update
 WORKDIR /app
 
 # Install puppeteer dependencies
-RUN apk add --no-cache \
-  chromium \
-  nss \
-  freetype \
-  harfbuzz \
-  ca-certificates \
-  ttf-freefont \
-  font-noto-cjk \
-  font-noto-emoji
+RUN apk add --no-cache chromium font-noto-cjk font-noto-emoji
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-  PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+ENV NODE_ENV=production
 
 COPY ./package.json ./
 COPY ./package-lock.json ./
@@ -39,7 +33,6 @@ RUN npm i
 # build
 COPY . /app
 
-ENV NODE_ENV=production
 EXPOSE 3000
 # run app
 CMD ["node", "index.js"]
