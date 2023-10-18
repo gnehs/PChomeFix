@@ -6,9 +6,22 @@ const pangu = require("pangu");
 const cheerio = require("cheerio");
 const Koa = require("koa");
 const Router = require("@koa/router");
+const puppeteer = require("puppeteer");
+const { JSDOM } = require("jsdom");
+const fs = require("fs");
 
 const app = new Koa();
 const router = new Router();
+
+let _browser;
+async function getBrowser() {
+  if (!_browser) {
+    _browser = await puppeteer.launch({
+      headless: "new",
+    });
+  }
+  return _browser;
+}
 
 async function pchomeJsonpAPI(url) {
   let res = await axios.get(url);
@@ -17,7 +30,29 @@ async function pchomeJsonpAPI(url) {
   res = res.replace(");}catch(e){if(window.console){console.log(e);}}", "");
   return JSON.parse(res);
 }
+async function getProductInfo(id) {
+  let prod = await pchomeJsonpAPI(
+    `https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`
+  );
+  let desc = await pchomeJsonpAPI(
+    `https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan&_callback=jsonp`
+  );
+  prod = Object.values(prod)[0];
+  desc = Object.values(desc)[0];
+  let title = pangu.spacing(cheerio.load(prod.Name).text());
+  let description = pangu.spacing(cheerio.load(desc.Slogan).text());
+  let img = Object.entries(prod.Pic).map(
+    ([server, url]) => `https://cs-${server}.ecimg.tw${url}`
+  )[0];
+  let price = prod.Price.P;
 
+  return {
+    title,
+    description,
+    img,
+    price,
+  };
+}
 app.use(serve(path.join(__dirname, "public")));
 router.get("/", async (ctx) => {
   let title = `PChome 預覽連結好朋友`;
@@ -92,20 +127,9 @@ router.get("/", async (ctx) => {
 });
 router.get(["/prod/:id", "/prod/:version/:id"], async (ctx) => {
   const { id } = ctx.params;
-  let prod = await pchomeJsonpAPI(
-    `https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`
-  );
-  let desc = await pchomeJsonpAPI(
-    `https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan&_callback=jsonp`
-  );
-  prod = Object.values(prod)[0];
-  desc = Object.values(desc)[0];
-  let title = pangu.spacing(cheerio.load(prod.Name).text());
-  let description = pangu.spacing(cheerio.load(desc.Slogan).text());
-  let img = Object.entries(prod.Pic).map(
-    ([server, url]) => `https://cs-${server}.ecimg.tw${url}`
-  )[0];
-  let url = `https://24h.pchome.com.tw/prod/v1/${id}`;
+  let { title, description } = await getProductInfo(id);
+  let img = `https://p.pancake.tw/og/${id}`;
+  let url = `https://24h.pchome.com.tw/prod/${id}`;
   let html = `
   <!DOCTYPE html>
   <html>
@@ -170,6 +194,77 @@ router.get(["/prod/:id", "/prod/:version/:id"], async (ctx) => {
 
   let country = ctx.request.header["cf-ipcountry"];
   console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
+});
+router.get("/og/:id", async (ctx) => {
+  const { id } = ctx.params;
+  console.time(`[og-image] ${id}`);
+  let { title, description, img, price } = await getProductInfo(id);
+  // generate og html
+  const h = new JSDOM(
+    fs.readFileSync(path.join(__dirname, "/public/og.html"), "utf8")
+  );
+  h.window.document.querySelector("[data-title]").textContent = title;
+  h.window.document.querySelector(
+    "[data-price]"
+  ).textContent = `$${price.toLocaleString()}`;
+  h.window.document.querySelector("[data-description]").innerHTML =
+    description.replaceAll("\n", "<br />");
+  h.window.document.querySelector("[data-image]").src = img;
+  h.window.document.querySelector("[data-generate-time]").textContent =
+    new Date().toLocaleString("zh-TW", {
+      timeZone: "Asia/Taipei",
+      hour12: false,
+    });
+  // generate og image
+  const browser = await getBrowser();
+  const page = await browser.newPage();
+
+  // Set the viewport to your preferred image size
+  await page.setViewport({ width: 1200, height: 640 });
+
+  // Set the content to our rendered HTML
+  await page.setContent(h.serialize(), {
+    waitUntil: "domcontentloaded",
+  });
+
+  // Wait until all images and fonts have loaded
+  await page.evaluate(async () => {
+    const selectors = Array.from(document.querySelectorAll("img"));
+    await Promise.all([
+      document.fonts.ready,
+      ...selectors.map((img) => {
+        // Image has already finished loading, let’s see if it worked
+        if (img.complete) {
+          // Image loaded and has presence
+          if (img.naturalHeight !== 0) return;
+          // Image failed, so it has no height
+          throw new Error("Image failed to load");
+        }
+        // Image hasn’t loaded yet, added an event listener to know when it does
+        return new Promise((resolve, reject) => {
+          img.addEventListener("load", resolve);
+          img.addEventListener("error", reject);
+        });
+      }),
+    ]);
+  });
+
+  const screenshotBuffer = await page.screenshot({
+    fullPage: false,
+    type: "png",
+    height: 1200,
+    width: 640,
+  });
+
+  await page.close();
+
+  ctx.set("Cache-Control", "public, max-age=604800");
+  ctx.type = "image/png";
+  ctx.body = screenshotBuffer;
+
+  let country = ctx.request.header["cf-ipcountry"];
+  console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
+  console.timeEnd(`[og-image] ${id}`);
 });
 router.get("/(.*)", async (ctx) => {
   // redirect to pchome
