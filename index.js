@@ -3,7 +3,6 @@ const colors = require("colors");
 const serve = require("koa-static");
 const path = require("path");
 const pangu = require("pangu");
-const cheerio = require("cheerio");
 const Koa = require("koa");
 const Router = require("@koa/router");
 const puppeteer = require("puppeteer");
@@ -23,7 +22,10 @@ async function getBrowser() {
   }
   return _browser;
 }
-
+function parseHtmlToText(html) {
+  const h = new JSDOM(`<!DOCTYPE html><body>${html}</body>`);
+  return h.window.document.querySelector("body").textContent;
+}
 async function pchomeJsonpAPI(url) {
   let res = await axios.get(url);
   res = res.data;
@@ -40,8 +42,8 @@ async function getProductInfo(id) {
   );
   prod = Object.values(prod)[0];
   desc = Object.values(desc)[0];
-  let title = pangu.spacing(cheerio.load(prod.Name).text());
-  let description = pangu.spacing(cheerio.load(desc.Slogan).text()).trim();
+  let title = pangu.spacing(parseHtmlToText(prod.Name));
+  let description = pangu.spacing(parseHtmlToText(desc.Slogan)).trim();
   if (description == "" && desc?.SloganInfo) {
     description = `・` + desc.SloganInfo.join("\n・");
   }
