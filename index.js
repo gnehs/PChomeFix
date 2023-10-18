@@ -42,7 +42,9 @@ async function getProductInfo(id) {
   desc = Object.values(desc)[0];
   let title = pangu.spacing(cheerio.load(prod.Name).text());
   let description = pangu.spacing(cheerio.load(desc.Slogan).text()).trim();
-  if (description == "") description = desc.SloganInfo?.join("\n");
+  if (description == "" && desc?.SloganInfo) {
+    description = `・` + desc.SloganInfo.join("\n・");
+  }
   let img = Object.entries(prod.Pic).map(
     ([server, url]) => `https://cs-${server}.ecimg.tw${url}`
   )[0];
