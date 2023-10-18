@@ -1,4 +1,3 @@
-const axios = require("axios");
 const colors = require("colors");
 const serve = require("koa-static");
 const path = require("path");
@@ -27,8 +26,7 @@ function parseHtmlToText(html) {
   return h.window.document.querySelector("body").textContent;
 }
 async function pchomeJsonpAPI(url) {
-  let res = await axios.get(url);
-  res = res.data;
+  let res = await fetch(url).then((res) => res.text());
   res = res.replace("try{jsonp(", "");
   res = res.replace(");}catch(e){if(window.console){console.log(e);}}", "");
   return JSON.parse(res);
