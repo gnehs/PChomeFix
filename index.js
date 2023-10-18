@@ -253,7 +253,8 @@ router.get("/og/:id", async (ctx) => {
 
   const screenshotBuffer = await page.screenshot({
     fullPage: false,
-    type: "png",
+    type: "jpeg",
+    quality: 95,
     height: 1200,
     width: 640,
   });
