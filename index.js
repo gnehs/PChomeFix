@@ -41,6 +41,14 @@ async function getProductInfo(id) {
     );
     prod = Object.values(prod)[0];
     desc = Object.values(desc)[0];
+    if (!prod || !desc) {
+      return {
+        title: "PChome 預覽連結好朋友",
+        description: "404",
+        img: "https://pancake.tw/img/pancake-bg.jpg",
+        price: 0,
+      };
+    }
     let title = pangu.spacing(parseHtmlToText(prod.Name));
     let description = pangu.spacing(parseHtmlToText(desc.Slogan)).trim();
     if (description == "" && desc?.SloganInfo) {
@@ -202,10 +210,12 @@ router.get(["/prod/:id", "/prod/:version/:id"], async (ctx) => {
   </body>
   </html>
   `;
+  if (description == "404") {
+    ctx.status = 404;
+  }
   ctx.set("Cache-Control", "public, max-age=604800");
   ctx.type = "text/html";
   ctx.body = html;
-
   let country = ctx.request.header["cf-ipcountry"];
   console.log(`${country || ctx.ip} ${ctx.url} `.gray + `${ctx.status}`.green);
 });
