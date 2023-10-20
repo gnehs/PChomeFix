@@ -32,29 +32,39 @@ async function pchomeJsonpAPI(url) {
   return JSON.parse(res);
 }
 async function getProductInfo(id) {
-  let prod = await pchomeJsonpAPI(
-    `https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`
-  );
-  let desc = await pchomeJsonpAPI(
-    `https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan,SloganInfo&_callback=jsonp`
-  );
-  prod = Object.values(prod)[0];
-  desc = Object.values(desc)[0];
-  let title = pangu.spacing(parseHtmlToText(prod.Name));
-  let description = pangu.spacing(parseHtmlToText(desc.Slogan)).trim();
-  if (description == "" && desc?.SloganInfo) {
-    description = `・` + desc.SloganInfo.join("\n・");
-  }
-  let img = Object.entries(prod.Pic).map(
-    ([server, url]) => `https://cs-${server}.ecimg.tw${url}`
-  )[0];
-  let price = prod.Price.P;
+  try {
+    let prod = await pchomeJsonpAPI(
+      `https://ecapi.pchome.com.tw/ecshop/prodapi/v2/prod/${id}&fields=Id,Name,Nick,Price,Discount,Pic&_callback=jsonp`
+    );
+    let desc = await pchomeJsonpAPI(
+      `https://ecapi-cdn.pchome.com.tw/cdn/ecshop/prodapi/v2/prod/${id}/desc&fields=Id,Slogan,SloganInfo&_callback=jsonp`
+    );
+    prod = Object.values(prod)[0];
+    desc = Object.values(desc)[0];
+    let title = pangu.spacing(parseHtmlToText(prod.Name));
+    let description = pangu.spacing(parseHtmlToText(desc.Slogan)).trim();
+    if (description == "" && desc?.SloganInfo) {
+      description = `・` + desc.SloganInfo.join("\n・");
+    }
+    let img = Object.entries(prod.Pic).map(
+      ([server, url]) => `https://cs-${server}.ecimg.tw${url}`
+    )[0];
+    let price = prod.Price.P;
 
+    return {
+      title,
+      description,
+      img,
+      price,
+    };
+  } catch (e) {
+    console.log(e);
+  }
   return {
-    title,
-    description,
-    img,
-    price,
+    title: "PChome 預覽連結好朋友",
+    description: "協助修正 PChome 線上購物商品在社群媒體與通訊軟體中的預覽",
+    img: "https://pancake.tw/img/pancake-bg.jpg",
+    price: 0,
   };
 }
 app.use(serve(path.join(__dirname, "public")));
