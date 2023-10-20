@@ -11,6 +11,11 @@
       margin: 0;
       padding: 0;
       line-height: 1.25;
+      font-family: 'Noto Serif CJK TC', 'Noto Color Emoji', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
     }
   </style>
 </head>
@@ -19,11 +24,10 @@
   <div style="
     width: 1200px;
     height: 640px;
-    background-color: #f8f8f8;
-    color: #111111;
+    background-color: #F8FAFC;
+    color: #111;
     position: relative;
-    font-family: 'Noto Sans CJK TC', 'Noto Color Emoji', sans-serif;
-  ">
+  " id="frame">
     <div
       style="
         padding: 48px 64px;
@@ -32,7 +36,6 @@
         display: flex;
         align-items: center;
         height: 640px;
-        font-family: 'Noto Serif CJK TC', 'Noto Color Emoji', serif;
     ">
       <div style="
         display: flex;
@@ -43,29 +46,31 @@
         height: 100%;
         width: 100%;
       ">
-        <div style="
-        font-size: 48px;
-        font-weight: bold;
-        margin-top: 16px;
-        " data-title>
-          一匙靈Attack
-        </div>
-        <div style="
-        font-size: 36px;
-        font-weight: bold;"
-          data-price>
-          $799
+        <div style="margin-top: 16px;">
+          <div style="
+          font-size: 48px;
+          font-weight: bold;
+          " data-title>
+            一匙靈Attack
+          </div>
+          <div style="
+          font-size: 36px;
+          font-weight: bold;"
+            data-price>
+            $799
+          </div>
         </div>
         <div style="
         flex: 1;
         overflow: hidden;
-        mask-image: linear-gradient(to top, transparent 0%, black 20%);
-        -webkit-mask-image: linear-gradient(to top, transparent 0%, black 20%);
+        mask-image: linear-gradient(to top, transparent 0%, black 40%);
+        -webkit-mask-image: linear-gradient(to top, transparent 0%, black 40%);
         margin-bottom: 16px;
         font-size: 24px;
         line-height: 1.5;
         "
           data-description>
+          🥞👀🌲🎉🐕⭐️<br />
           超越日曬等級 99.9%除菌力<br />
           日本制菌防禦技術<br />
           徹底淨味<br />
@@ -108,10 +113,27 @@
           justify-content: space-between;
           align-items: center;
           font-size: 12px;
-          opacity: 0.25;
+          opacity: 0.1;
     ">
-      <div style="font-family: 'Noto Sans CJK TC';">PChome 預覽連結好朋友</div>
-      <div style="font-family: 'Noto Sans CJK TC';" data-generate-time>2023-12-31 12:00:00</div>
+      <div>Made with 🥞 by gnehs.net</div>
+      <div data-generate-time>2023-12-31 12:00:00</div>
+    </div>
+
+    <div
+      style="
+          position: absolute;
+          top: 8px;
+          left: 0;
+          right: 0;
+          margin: auto;
+          width: calc(1200px - 16px);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 12px;
+          opacity: 0.1;
+    ">
+      <div>PChome 預覽連結好朋友</div>
     </div>
     <div
       style="

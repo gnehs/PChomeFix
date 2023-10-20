@@ -201,11 +201,27 @@ router.get(["/prod/:id", "/prod/:version/:id"], async (ctx) => {
 });
 router.get("/og/:id", async (ctx) => {
   const { id } = ctx.params;
+  const bgColorList = [
+    "#F8FAFC",
+    "#F9FAFB",
+    "#F5F5F4",
+    "#F7FAFC",
+    "#FAFAFA",
+    "#F7F7F9",
+    "#F9FAFC",
+    "#FAFAF9",
+    "#F8F8F8",
+    "#F1F5F9",
+    "#F6F6F8",
+    "#F2F2F2",
+  ];
   let { title, description, img, price } = await getProductInfo(id);
   // generate og html
   const h = new JSDOM(
     fs.readFileSync(path.join(__dirname, "/public/og.html"), "utf8")
   );
+  h.window.document.querySelector("#frame").style.backgroundColor =
+    bgColorList[Math.floor(Math.random() * bgColorList.length)]; // random background color
   h.window.document.querySelector("[data-title]").textContent = title;
   h.window.document.querySelector(
     "[data-price]"
