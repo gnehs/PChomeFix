@@ -13,3 +13,11 @@
 ### 透過 UserScript 使用
 
 輕觸「[這裡](https://github.com/gnehs/userscripts/raw/main/pchome-link-copy.user.js)」來安裝 UserScript，當開啟支援的商品頁面時便會自動顯示複製連結在商品圖片下方。
+
+### 透過 iOS 捷徑使用
+
+https://www.icloud.com/shortcuts/576b860829c943e2859fecbb571227e4
+
+- 透過分享功能快速複製連結
+- 自動清理追蹤碼
+- 自動替換為預覽連結

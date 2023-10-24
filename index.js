@@ -137,6 +137,8 @@ router.get("/", async (ctx) => {
     <p>將連結中的 <code>https://24h.pchome.com.tw</code> 替換為 <code>https://p.pancake.tw</code> 即可</p>
     <h3>透過 UserScript 使用</h3>
     <p>輕觸「<a href="https://github.com/gnehs/userscripts/raw/main/pchome-link-copy.user.js" target="_blank">這裡</a>」來安裝 UserScript，當開啟支援的商品頁面時便會自動顯示複製連結在商品圖片下方。</p>
+    <h3>透過 iOS 捷徑使用</h3>
+    <p>輕觸「<a href="https://www.icloud.com/shortcuts/576b860829c943e2859fecbb571227e4" target="_blank">這裡</a>」來安裝 iOS 捷徑，透過分享功能快速複製連結。</p>
     <h2>相關連結</h2>
     <ul>
       <li><a href="https://github.com/gnehs/PChomeFix" target="_blank">GitHub</a></li>
