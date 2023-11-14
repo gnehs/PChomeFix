@@ -16,7 +16,7 @@
 
 ### 透過 iOS 捷徑使用
 
-https://www.icloud.com/shortcuts/576b860829c943e2859fecbb571227e4
+https://www.icloud.com/shortcuts/f2a73d3f47fe4832883d271230d0d84a
 
 - 透過分享功能快速複製連結
 - 自動清理追蹤碼
