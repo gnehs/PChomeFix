@@ -8,8 +8,12 @@ const app = new Koa();
 const router = new Router();
 
 const pchomeRouter = require("./router/pchome");
-app.use(pchomeRouter.routes());
-app.use(pchomeRouter.allowedMethods());
+router.use(pchomeRouter.routes());
+router.use(pchomeRouter.allowedMethods());
+
+const gampsRouter = require("./router/gmaps");
+router.use(gampsRouter.routes());
+router.use(gampsRouter.allowedMethods());
 
 app.use(serve(path.join(__dirname, "public")));
 
