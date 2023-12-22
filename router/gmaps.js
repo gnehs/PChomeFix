@@ -111,10 +111,8 @@ router.get("/og/gmaps/:id", async (ctx) => {
     document.querySelector(".app-viewcard-strip").style.display = "none";
     document.querySelector("button[jsaction^='drawer.close;']").style.display =
       "none";
+    document.querySelector("button[jsaction^='drawer.close;']").click();
   });
-  // click jsaction="drawer.close;...
-  await page.waitForSelector("button[jsaction^='drawer.close;']");
-  await page.$eval("button[jsaction^='drawer.close;']", (el) => el.click());
 
   await page.waitForTimeout(1000);
   // screenshot element .id-scene
