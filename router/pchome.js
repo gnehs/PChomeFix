@@ -238,7 +238,7 @@ router.get("/og/pchome/:id", async (ctx) => {
       hour12: false,
     });
   // generate og image
-  console.time(`[og-image] ${id}`);
+  console.time(`[og-image][pchome] ${id}`);
   const browser = await getBrowser();
   const page = await browser.newPage();
 
@@ -281,7 +281,7 @@ router.get("/og/pchome/:id", async (ctx) => {
   });
 
   await page.close();
-  console.timeEnd(`[og-image] ${id}`);
+  console.timeEnd(`[og-image][pchome] ${id}`);
 
   ctx.set("Cache-Control", "public, max-age=604800");
   ctx.type = "image/png";

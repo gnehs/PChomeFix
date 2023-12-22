@@ -83,7 +83,7 @@ router.get("/gmaps/:id", async (ctx) => {
 });
 router.get("/og/gmaps/:id", async (ctx) => {
   const { id } = ctx.params;
-  console.time(`[og-image] ${id}`);
+  console.time(`[og-image][gamps] ${id}`);
   // https://maps.app.goo.gl/3nq6FBcusGJAN1f78
   const browser = await getBrowser();
   const page = await browser.newPage();
@@ -110,7 +110,7 @@ router.get("/og/gmaps/:id", async (ctx) => {
   const element = await page.$(".id-scene");
   const screenshotBuffer = await element.screenshot();
   await page.close();
-  console.timeEnd(`[og-image] ${id}`);
+  console.timeEnd(`[og-image][gamps] ${id}`);
 
   ctx.set("Cache-Control", "public, max-age=604800");
   ctx.type = "image/png";
