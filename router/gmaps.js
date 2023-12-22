@@ -84,7 +84,7 @@ router.get("/gmaps/:id", async (ctx) => {
 router.get("/og/gmaps/:id", async (ctx) => {
   const { id } = ctx.params;
   console.time(`[og-image][gamps] ${id}`);
-  // https://maps.app.goo.gl/3nq6FBcusGJAN1f78
+
   const browser = await getBrowser();
   const page = await browser.newPage();
   await page.setViewport({ width: 600, height: 315, deviceScaleFactor: 2 });
