@@ -80,6 +80,7 @@ router.get("/gmaps/:id", async (ctx) => {
   ctx.set("Cache-Control", "public, max-age=604800");
   ctx.type = "text/html";
   ctx.body = html;
+  fetch(img);
 });
 router.get("/og/gmaps/:id", async (ctx) => {
   const { id } = ctx.params;
@@ -96,7 +97,7 @@ router.get("/og/gmaps/:id", async (ctx) => {
   // put marker in center
   // get url
   let url = await page.url();
-  // remove /@25.0335769,121.5589501,17z/
+  // remove location to center the marker
   url = url.replace(/\/@.*?z\//, "/");
   await page.goto(url, {
     waitUntil: "networkidle2",
