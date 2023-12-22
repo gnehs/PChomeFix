@@ -91,7 +91,7 @@ router.get("/og/gmaps/:id", async (ctx) => {
   await page.goto(`https://maps.app.goo.gl/${id}`, {
     waitUntil: "networkidle2",
   });
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(100);
 
   // put marker in center
   // get url
