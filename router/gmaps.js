@@ -80,7 +80,6 @@ router.get("/gmaps/:id", async (ctx) => {
   ctx.set("Cache-Control", "public, max-age=604800");
   ctx.type = "text/html";
   ctx.body = html;
-  fetch(img);
 });
 router.get("/og/gmaps/:id", async (ctx) => {
   const { id } = ctx.params;
