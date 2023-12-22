@@ -87,10 +87,21 @@ router.get("/og/gmaps/:id", async (ctx) => {
   // https://maps.app.goo.gl/3nq6FBcusGJAN1f78
   const browser = await getBrowser();
   const page = await browser.newPage();
-  await page.setViewport({ width: 1200, height: 630 });
+  await page.setViewport({ width: 600, height: 315, deviceScaleFactor: 2 });
   await page.goto(`https://maps.app.goo.gl/${id}`, {
     waitUntil: "networkidle2",
   });
+  await page.waitForTimeout(1000);
+
+  // put marker in center
+  // get url
+  let url = await page.url();
+  // remove /@25.0335769,121.5589501,17z/
+  url = url.replace(/\/@.*?z\//, "/");
+  await page.goto(url, {
+    waitUntil: "networkidle2",
+  });
+
   await page.waitForSelector(".id-scene");
   // hide elements
   await page.evaluate(() => {
