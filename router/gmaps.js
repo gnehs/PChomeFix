@@ -87,7 +87,7 @@ router.get("/og/gmaps/:id", async (ctx) => {
 
   const browser = await getBrowser();
   const page = await browser.newPage();
-  await page.setViewport({ width: 600, height: 315 });
+  await page.setViewport({ width: 600, height: 315, deviceScaleFactor: 2 });
   await page.goto(`https://maps.app.goo.gl/${id}`, {
     waitUntil: "networkidle2",
   });
